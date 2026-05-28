@@ -20,14 +20,18 @@ namespace CrudAvanzado.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Producto>>> GetProductos()
         {
-            return await _context.Productos.ToListAsync();
+            return await _context.Productos
+                .Include(p => p.Marca)
+                .ToListAsync();
         }
 
         // GET: api/productos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Producto>> GetProducto(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
+            var producto = await _context.Productos
+            .Include(p => p.Marca)
+             .FirstOrDefaultAsync(p => p.IdProducto == id);
 
             if (producto == null)
                 return NotFound();
@@ -42,14 +46,14 @@ namespace CrudAvanzado.Controllers
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProducto), new { id = producto.Id }, producto);
+            return CreatedAtAction(nameof(GetProducto), new { id = producto.IdProducto }, producto);
         }
 
         // PUT: api/productos/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProducto(int id, Producto producto)
         {
-            if (id != producto.Id)
+            if (id != producto.IdProducto)
                 return BadRequest();
 
             _context.Entry(producto).State = EntityState.Modified;

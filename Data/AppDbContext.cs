@@ -11,6 +11,7 @@ namespace CrudAvanzado.Data
         }
 
         public DbSet<Producto> Productos { get; set; }
+        public DbSet<Marca> Marcas { get; set; }
 
         // 👇 ACA AGREGÁS ESTO
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -18,7 +19,7 @@ namespace CrudAvanzado.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Producto>()
-                .Property(p => p.Precio)
+                .Property(p => p.PrecioProducto)
                 .HasPrecision(18, 2);
         }
     }

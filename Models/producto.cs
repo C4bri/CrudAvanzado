@@ -1,11 +1,21 @@
 namespace CrudAvanzado.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class Producto
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public decimal Precio { get; set; }
-        public int Stock { get; set; }
-        public bool Activo { get; set; } = true;
+        [Key]
+        public int IdProducto { get; set; }
+
+        public string NombreProducto { get; set; } = string.Empty;
+        public decimal PrecioProducto { get; set; }
+        public int StockProducto { get; set; }
+        public bool ActivoProducto { get; set; }
+
+        public int IdMarca { get; set; }
+
+        [ForeignKey("IdMarca")]
+        public Marca? Marca { get; set; }
     }
 }
