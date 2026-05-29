@@ -79,3 +79,11 @@ button {
         opacity: 1;
     }
 }
+.icono-warning {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.modal-contenido {
+    text-align: center;
+}

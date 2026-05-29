@@ -8,6 +8,8 @@ namespace CrudAvanzado.Models
         [Key]
         public int IdProducto { get; set; }
 
+        public string SKU { get; set; } = string.Empty;
+
         public string NombreProducto { get; set; } = string.Empty;
         public decimal PrecioProducto { get; set; }
         public int StockProducto { get; set; }
@@ -17,5 +19,10 @@ namespace CrudAvanzado.Models
 
         [ForeignKey("IdMarca")]
         public Marca? Marca { get; set; }
+
+        public int IdSubFamilia { get; set; }
+
+        [ForeignKey("IdSubFamilia")]
+        public SubFamilia? SubFamilia { get; set; }
     }
 }

@@ -13,7 +13,10 @@ namespace CrudAvanzado.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Marca> Marcas { get; set; }
 
-        // 👇 ACA AGREGÁS ESTO
+        // 🔥 AGREGAR ESTO
+        public DbSet<Familia> Familias { get; set; }
+        public DbSet<SubFamilia> SubFamilias { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

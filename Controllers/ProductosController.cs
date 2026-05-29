@@ -16,22 +16,24 @@ namespace CrudAvanzado.Controllers
             _context = context;
         }
 
-        // GET: api/productos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Producto>>> GetProductos()
         {
             return await _context.Productos
                 .Include(p => p.Marca)
+                .Include(p => p.SubFamilia)
+                    .ThenInclude(sf => sf!.Familia)
                 .ToListAsync();
         }
 
-        // GET: api/productos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Producto>> GetProducto(int id)
         {
             var producto = await _context.Productos
-            .Include(p => p.Marca)
-             .FirstOrDefaultAsync(p => p.IdProducto == id);
+                .Include(p => p.Marca)
+                .Include(p => p.SubFamilia)
+                    .ThenInclude(sf => sf!.Familia)
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
 
             if (producto == null)
                 return NotFound();
@@ -39,22 +41,32 @@ namespace CrudAvanzado.Controllers
             return producto;
         }
 
-        // POST: api/productos
         [HttpPost]
         public async Task<ActionResult<Producto>> PostProducto(Producto producto)
         {
+            var existe = await _context.Productos
+                .AnyAsync(p => p.SKU == producto.SKU);
+
+            if (existe)
+                return BadRequest("El SKU ya existe. Ingrese uno diferente.");
+
             _context.Productos.Add(producto);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetProducto), new { id = producto.IdProducto }, producto);
         }
 
-        // PUT: api/productos/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProducto(int id, Producto producto)
         {
             if (id != producto.IdProducto)
                 return BadRequest();
+
+            var existe = await _context.Productos
+                .AnyAsync(p => p.SKU == producto.SKU && p.IdProducto != id);
+
+            if (existe)
+                return BadRequest("El SKU que intenta modificar ya existe. Ingrese uno diferente.");
 
             _context.Entry(producto).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -62,7 +74,6 @@ namespace CrudAvanzado.Controllers
             return NoContent();
         }
 
-        // DELETE: api/productos/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProducto(int id)
         {
